@@ -1,31 +1,32 @@
 import throttle from 'lodash.throttle';
 
 const STORAGE_KEY = 'feedback-form-state';
-formEl = document.querySelector('.feedback-form');
-inputEl = document.querySelector('.feedback-form input');
-textAreaEl = document.querySelector('.feedback-form textarea');
+const formEl = document.querySelector('.feedback-form');
+const inputEl = document.querySelector('.feedback-form input');
+const textAreaEl = document.querySelector('.feedback-form textarea');
+
 formEl.addEventListener('submit', onFormSubmit);
 formEl.addEventListener('input', throttle(onInputsChange, 500));
 
-let Obj = {};
+let saveObj = {};
 
 checkStorage();
 
 function checkStorage() {
-  const storageObj = localStorage.getItem(STORAGE_KEY);
+  const commingObj = localStorage.getItem(STORAGE_KEY);
 
-  if (storageObj) {
-    Obj = JSON.parse(storageObj);
+  if (commingObj) {
+    saveObj = JSON.parse(commingObj);
 
-    for (let key in Obj) {
-      formEl.elements[key].value = Obj[key];
+    for (let key in saveObj) {
+      formEl.elements[key].value = saveObj[key];
     }
   }
 }
 
 function onInputsChange(e) {
-  Obj[e.target.name] = e.target.value;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(Obj));
+  saveObj[e.target.name] = e.target.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(saveObj));
 }
 
 function onFormSubmit(e) {
@@ -38,7 +39,7 @@ function onFormSubmit(e) {
     return alert(`Все поля должны быть заполнены`);
   }
 
-  console.log(Obj);
+  console.log(saveObj);
   localStorage.removeItem(STORAGE_KEY);
   e.currentTarget.reset();
 }
